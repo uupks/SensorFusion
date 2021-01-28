@@ -35,3 +35,5 @@
 *.exe
 *.out
 *.app
+Log
+slam_data

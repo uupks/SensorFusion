@@ -1,8 +1,9 @@
-data_path: /workspace/assignments/01-lidar-odometry/src/lidar_localization   # 数据存放路径
+# data_path: /workspace/assignments/01-lidar-odometry/src/lidar_localization   # 数据存放路径
+data_path: ./   # 数据存放路径
 
 # 匹配
 # TODO: implement your custom registration method and add it here
-registration_method: NDT   # 选择点云匹配方法，目前支持：ICP, NDT
+registration_method: ICP   # 选择点云匹配方法，目前支持：ICP, NDT
 
 # 局部地图
 key_frame_distance: 2.0 # 关键帧距离

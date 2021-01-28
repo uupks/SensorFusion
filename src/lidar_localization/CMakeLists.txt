@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(lidar_localization)
 
-SET(CMAKE_BUILD_TYPE "Release")
+# SET(CMAKE_BUILD_TYPE "Release")
+message(STATUS "CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
-add_compile_options(-std=c++11)
-add_definitions(-std=c++11)
+add_compile_options(-std=c++14)
+add_definitions(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -44,6 +45,8 @@ file(GLOB_RECURSE ALL_SRCS "*.cpp")
 file(GLOB_RECURSE NODE_SRCS "src/*_node.cpp")
 
 list(REMOVE_ITEM ALL_SRCS ${NODE_SRCS})
+
+message(STATUS "ALL_TARGET_LIBRARIES : ${ALL_TARGET_LIBRARIES}")
 
 add_executable(front_end_node src/front_end_node.cpp ${ALL_SRCS})
 add_dependencies(front_end_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)

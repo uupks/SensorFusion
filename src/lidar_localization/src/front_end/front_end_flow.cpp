@@ -18,9 +18,9 @@ FrontEndFlow::FrontEndFlow(ros::NodeHandle& nh) {
 
     InitSubscribers(nh, config_node["measurements"]);
 
-    cloud_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "current_scan", 100, "/map");
-    local_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "local_map", 100, "/map");
-    global_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "global_map", 100, "/map");
+    cloud_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "current_scan", 100, "map");
+    local_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "local_map", 100, "map");
+    global_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "global_map", 100, "map");
     laser_odom_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "laser_odom", "map", "lidar", 100);
     gnss_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "gnss", "map", "lidar", 100);
 
@@ -81,6 +81,7 @@ bool FrontEndFlow::InitSubscribers(ros::NodeHandle& nh, const YAML::Node& config
         nh, 
         config_node["gnss"]["topic_name"].as<std::string>(), config_node["gnss"]["queue_size"].as<int>()
     );
+    return true;
 }
 
 bool FrontEndFlow::ReadData() {
