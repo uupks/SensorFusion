@@ -81,6 +81,8 @@ bool FrontEnd::InitRegistration(std::shared_ptr<RegistrationInterface>& registra
         registration_ptr = std::make_shared<NDTRegistration>(config_node[registration_method]);
     } else if (registration_method == "ICP") {
         registration_ptr = std::make_shared<ICPRegistration>(config_node[registration_method]);
+    } else if (registration_method == "MY_ICP_SVD") {
+        registration_ptr = std::make_shared<MySVDICPRegistration>(config_node[registration_method]);
     }
     /*
     TODO: register your custom implementation here
@@ -138,6 +140,7 @@ bool FrontEnd::Update(const CloudData& cloud_data, Eigen::Matrix4f& cloud_pose) 
 
     // 更新相邻两帧的相对运动
     step_pose = last_pose.inverse() * current_frame_.pose;
+    // step_pose = current_frame_.pose.inverse() * last_pose;
     predict_pose = current_frame_.pose * step_pose;
     last_pose = current_frame_.pose;
 
