@@ -19,6 +19,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_srvs
 )
 
+find_package(Sophus REQUIRED)
+include_directories( ${Sophus_INCLUDE_DIRS} )
+
 add_service_files(
    FILES
    saveMap.srv
@@ -50,7 +53,7 @@ message(STATUS "ALL_TARGET_LIBRARIES : ${ALL_TARGET_LIBRARIES}")
 
 add_executable(front_end_node src/front_end_node.cpp ${ALL_SRCS})
 add_dependencies(front_end_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(front_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
+target_link_libraries(front_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES} ${Sophus_LIBRARIES})
 
 #############
 ## Install ##

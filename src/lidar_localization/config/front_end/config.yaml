@@ -3,7 +3,7 @@ data_path: ./   # 数据存放路径
 
 # 匹配
 # TODO: implement your custom registration method and add it here
-registration_method: MY_ICP_SVD   # 选择点云匹配方法，目前支持：ICP, NDT
+registration_method: MY_ICP_GN   # 选择点云匹配方法，目前支持：ICP, NDT
 
 # 局部地图
 key_frame_distance: 2.0 # 关键帧距离
@@ -30,6 +30,11 @@ NDT:
     max_iter : 30
 MY_ICP_SVD:
     max_corr_dist : 1.2
+    trans_eps : 0.01
+    euc_fitness_eps : 0.36
+    max_iter : 30
+MY_ICP_GN:
+    max_corr_dist : 1.0
     trans_eps : 0.01
     euc_fitness_eps : 0.36
     max_iter : 30

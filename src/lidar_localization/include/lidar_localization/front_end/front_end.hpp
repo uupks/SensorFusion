@@ -24,6 +24,7 @@
 #include "lidar_localization/models/registration/icp_registration.hpp"
 #include "lidar_localization/models/registration/ndt_registration.hpp"
 #include "lidar_localization/models/registration/my_svd_registration.hpp"
+#include "lidar_localization/models/registration/my_gn_icp_registration.hpp"
 // TODO: include your custom registration method interface here
 
 namespace lidar_localization {
