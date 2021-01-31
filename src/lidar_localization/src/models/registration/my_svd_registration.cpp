@@ -37,9 +37,9 @@ bool MySVDICPRegistration::ScanMatch(const CloudData::CLOUD_PTR& input_source,
     pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
     kdtree.setInputCloud(target_);
 
-    Eigen::Matrix4f transform = predict_pose;
+    Eigen::Matrix4f transform = Eigen::Matrix4f::Identity();
     CloudData::CLOUD_PTR transformed_source(new CloudData::CLOUD());
-    pcl::transformPointCloud(*input_source, *transformed_source, transform);
+    pcl::transformPointCloud(*input_source, *transformed_source, predict_pose);
 
     // ICP 迭代
     for (size_t i = 0; i < max_iter_; i++)
@@ -127,8 +127,8 @@ bool MySVDICPRegistration::ScanMatch(const CloudData::CLOUD_PTR& input_source,
             break;
         }
     }
-    result_pose = transform;
-    pcl::transformPointCloud(*input_source, *result_cloud_ptr, transform);
+    result_pose = transform * predict_pose;
+    pcl::transformPointCloud(*input_source, *result_cloud_ptr, result_pose);
 
     return true;
 }
