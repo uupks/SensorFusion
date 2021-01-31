@@ -24,6 +24,7 @@ bool save_map_callback(saveMap::Request &request, saveMap::Response &response) {
 
 int main(int argc, char *argv[]) {
     google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
     FLAGS_log_dir = WORK_SPACE_PATH + "/Log";
     FLAGS_alsologtostderr = 1;
 
