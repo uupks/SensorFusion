@@ -4,45 +4,28 @@
 
 - 线特征残差
 
-$$d_{\epsilon}=\frac{\begin{vmatrix} 
-    (\widetilde{p}_i-p_b) \times (\widetilde{p}_i-p_a)
-\end{vmatrix}
-}{\begin{vmatrix}p_a-p_b
-\end{vmatrix}}$$
+![](https://cdn.nlark.com/yuque/__latex/1af56c82e4e26b42c78672a3f5a0d0c9.svg)
 
+![](https://cdn.nlark.com/yuque/__latex/56c4f8bb5d68ca1e36956a904ec91e3a.svg)
 
-$$\begin{aligned}
-\frac{\partial{d_\epsilon}}{\partial{\xi}} = 
-\frac{\partial{d_\epsilon}}{\partial{\widetilde{p}_i}} \frac{\partial{\widetilde{p}_i}}{\partial{\xi}} 
-\end{aligned}$$
 令
-$$X=(\widetilde{p}_i-p_b)\times(\widetilde{p}_i-p_a)$$
+
+![](https://cdn.nlark.com/yuque/__latex/844d4cb1c69a9c128e39be8ffeb5d0ed.svg)
+
 则右边第一项为标量对列向量求导，用分子记法的话结果需要转置，为1x3矩阵，可以与第二项直接相乘，最终雅可比为1x6矩阵。
-$$\begin{aligned}
-\frac{\partial{d}_{\epsilon}}{\partial{\widetilde{p}_i}} & =
-\frac{1}{\begin{vmatrix}p_a - p_b\end{vmatrix}}\frac{\partial{\begin{vmatrix}X\end{vmatrix}}}{\partial{\widetilde{p}_i}} = \frac{1}{\begin{vmatrix}p_a - p_b\end{vmatrix}}
-\frac{\partial\begin{vmatrix}X\end{vmatrix}}{\partial{X}}\frac{\partial{X}}{\partial{\widetilde{p}_i}} \\
-& = \frac{1}{\begin{vmatrix}p_a - p_b\end{vmatrix}}\frac{X}{\begin{vmatrix}X\end{vmatrix}}\left( \frac{\partial{(\widetilde{p}_i - p_b)^{\land}(\widetilde{p}_i-p_a)}}{\partial{\widetilde{p}_i}}+\frac{(\widetilde{p}_i-p_b)^{\land}\partial(\widetilde{p}_i-p_a)}{\partial{\widetilde{p}_i}} \right) \\
-& = \frac{1}{\begin{vmatrix}p_a - p_b\end{vmatrix}}\frac{X}{\begin{vmatrix}X\end{vmatrix}}\left( -(\widetilde{p}_i-p_a)^{\land}+(\widetilde{p}_i-p_b)^{\land}\right) \\
-& = \frac{1}{\begin{vmatrix}p_a - p_b\end{vmatrix}}\frac{X}{\begin{vmatrix}X\end{vmatrix}}\left( p_a-p_b\right)^{\land}
-\end{aligned}$$
+
+![](https://cdn.nlark.com/yuque/__latex/a7f8feb65cb4addf75eb92da7492e598.svg)
+
 根据李代数相关结论，右边第二项为
-$$\frac{\partial{\widetilde{p}_i}}{\partial{\xi}} = 
-\begin{bmatrix} I & -(Rp_i+t)^{\land} \\
-0 & 0
-\end{bmatrix}$$
+
+![](https://cdn.nlark.com/yuque/__latex/929f5842da4fef36a6bff05a38a03761.svg)
 
 
 - 面特征残差
 
-$$  d_{H} = (\widetilde{p}_i - p_j)\cdot\frac{(p_l-p_j)\times(p_m-p_j)}{
-    \begin{vmatrix}
-        (p_l-p_j)\times(p_m-p_j)
-    \end{vmatrix}}$$
+![](https://cdn.nlark.com/yuque/__latex/844ab12b56cb3d99a8d5a4cb8e2a6b9c.svg)
 
-
-$$\frac{\partial{d_{H}}}{\partial{\xi}}=\frac{\partial{d_H}}{\partial{\widetilde{p}_i}}\frac{\partial{\widetilde{p}_i}}{\partial{\xi}}$$
-
+![](https://cdn.nlark.com/yuque/__latex/52102c7254a0a049efb3b4e3a60d5f83.svg)
 
 面特征残差分子为向量的点乘结果为标量，分母也为标量，所以**面特征残差取模和不取模是一样的**？
 ## 2. 使用Sophus解析形式雅可比
