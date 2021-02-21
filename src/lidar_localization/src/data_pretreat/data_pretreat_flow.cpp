@@ -23,7 +23,7 @@ DataPretreatFlow::DataPretreatFlow(ros::NodeHandle& nh, std::string cloud_topic)
 
     // publisher
     cloud_pub_ptr_ = std::make_shared<CloudPublisher>(nh, cloud_topic, "/velo_link", 100);
-    gnss_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "/synced_gnss", "/map", "/velo_link", 100);
+    gnss_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "/synced_gnss", "map", "/velo_link", 100);
 
     // motion compensation for lidar measurement:
     distortion_adjust_ptr_ = std::make_shared<DistortionAdjust>();
@@ -102,6 +102,7 @@ bool DataPretreatFlow::InitGNSS() {
     static bool gnss_inited = false;
     if (!gnss_inited) {
         GNSSData gnss_data = gnss_data_buff_.front();
+        printf("First GNSS : [%f, %f, %f]\n", gnss_data.longitude, gnss_data.latitude, gnss_data.altitude);
         gnss_data.InitOriginPosition();
         gnss_inited = true;
     }

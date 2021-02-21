@@ -53,12 +53,13 @@ struct TableStruct_ring_5fkeys_2eproto {
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_ring_5fkeys_2eproto;
+::PROTOBUF_NAMESPACE_ID::Metadata descriptor_table_ring_5fkeys_2eproto_metadata_getter(int index);
 namespace scan_context_io {
 class RingKey;
-class RingKeyDefaultTypeInternal;
+struct RingKeyDefaultTypeInternal;
 extern RingKeyDefaultTypeInternal _RingKey_default_instance_;
 class RingKeys;
-class RingKeysDefaultTypeInternal;
+struct RingKeysDefaultTypeInternal;
 extern RingKeysDefaultTypeInternal _RingKeys_default_instance_;
 }  // namespace scan_context_io
 PROTOBUF_NAMESPACE_OPEN
@@ -74,6 +75,7 @@ class RingKey PROTOBUF_FINAL :
  public:
   inline RingKey() : RingKey(nullptr) {}
   virtual ~RingKey();
+  explicit constexpr RingKey(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   RingKey(const RingKey& from);
   RingKey(RingKey&& from) noexcept
@@ -110,8 +112,9 @@ class RingKey PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const RingKey& default_instance();
-
+  static const RingKey& default_instance() {
+    return *internal_default_instance();
+  }
   static inline const RingKey* internal_default_instance() {
     return reinterpret_cast<const RingKey*>(
                &_RingKey_default_instance_);
@@ -177,8 +180,7 @@ class RingKey PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_ring_5fkeys_2eproto);
-    return ::descriptor_table_ring_5fkeys_2eproto.file_level_metadata[kIndexInFileMessages];
+    return ::descriptor_table_ring_5fkeys_2eproto_metadata_getter(kIndexInFileMessages);
   }
 
   public:
@@ -230,6 +232,7 @@ class RingKeys PROTOBUF_FINAL :
  public:
   inline RingKeys() : RingKeys(nullptr) {}
   virtual ~RingKeys();
+  explicit constexpr RingKeys(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   RingKeys(const RingKeys& from);
   RingKeys(RingKeys&& from) noexcept
@@ -266,8 +269,9 @@ class RingKeys PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const RingKeys& default_instance();
-
+  static const RingKeys& default_instance() {
+    return *internal_default_instance();
+  }
   static inline const RingKeys* internal_default_instance() {
     return reinterpret_cast<const RingKeys*>(
                &_RingKeys_default_instance_);
@@ -333,8 +337,7 @@ class RingKeys PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_ring_5fkeys_2eproto);
-    return ::descriptor_table_ring_5fkeys_2eproto.file_level_metadata[kIndexInFileMessages];
+    return ::descriptor_table_ring_5fkeys_2eproto_metadata_getter(kIndexInFileMessages);
   }
 
   public:
