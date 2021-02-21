@@ -140,4 +140,8 @@ bool MyGNICPRegistration::ScanMatch(const CloudData::CLOUD_PTR& input_source,
     return true;
 }
 
+float MyGNICPRegistration::GetFitnessScore() {
+    return 0.0;
+}
+
 }

@@ -21,6 +21,7 @@ class MyGNICPRegistration: public RegistrationInterface {
                    const Eigen::Matrix4f& predict_pose, 
                    CloudData::CLOUD_PTR& result_cloud_ptr,
                    Eigen::Matrix4f& result_pose) override;
+    float GetFitnessScore() override;
     
   private:
     bool ComputeCorrespondences(

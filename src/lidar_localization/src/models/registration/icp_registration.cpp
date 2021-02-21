@@ -69,4 +69,8 @@ bool ICPRegistration::ScanMatch(const CloudData::CLOUD_PTR& input_source,
     return true;
 }
 
+float ICPRegistration::GetFitnessScore() {
+    return icp_ptr_->getFitnessScore();
+}
+
 }

@@ -133,4 +133,8 @@ bool MySVDICPRegistration::ScanMatch(const CloudData::CLOUD_PTR& input_source,
     return true;
 }
 
+float MySVDICPRegistration::GetFitnessScore() {
+    return 0.0;
+}
+
 }
