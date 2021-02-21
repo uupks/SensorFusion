@@ -8,6 +8,10 @@
 #include "glog/logging.h"
 
 //静态成员变量必须在类外初始化
+double global_map_origin_longitude = 8.390450;
+double global_map_origin_latitude = 48.982651;
+double global_map_origin_altitude = 116.395850;
+
 double lidar_localization::GNSSData::origin_longitude = 0.0;
 double lidar_localization::GNSSData::origin_latitude = 0.0;
 double lidar_localization::GNSSData::origin_altitude = 0.0;
@@ -16,11 +20,12 @@ GeographicLib::LocalCartesian lidar_localization::GNSSData::geo_converter;
 
 namespace lidar_localization {
 void GNSSData::InitOriginPosition() {
-    geo_converter.Reset(latitude, longitude, altitude);
+    geo_converter.Reset(global_map_origin_latitude, global_map_origin_longitude, global_map_origin_altitude);
 
-    origin_longitude = longitude;
-    origin_latitude = latitude;
-    origin_altitude = altitude;
+    origin_longitude = global_map_origin_longitude;
+    origin_latitude = global_map_origin_latitude;
+    origin_altitude = global_map_origin_altitude;
+    printf("GNSSData origin : [%f, %f, %f]\n", GNSSData::origin_latitude, GNSSData::origin_longitude, GNSSData::origin_altitude);
 
     origin_position_inited = true;
 }

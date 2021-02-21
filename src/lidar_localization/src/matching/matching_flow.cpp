@@ -17,14 +17,14 @@ MatchingFlow::MatchingFlow(ros::NodeHandle& nh) {
 
     // publisher:
     // a. global point cloud map:
-    global_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "/global_map", "/map", 100);
+    global_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "/global_map", "map", 100);
     // b. local point cloud map:
-    local_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "/local_map", "/map", 100);
+    local_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "/local_map", "map", 100);
     // c. current scan:
-    current_scan_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "/current_scan", "/map", 100);
+    current_scan_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "/current_scan", "map", 100);
     // d. estimated lidar pose in map frame:
-    laser_odom_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "/laser_localization", "/map", "/lidar", 100);
-    laser_tf_pub_ptr_ = std::make_shared<TFBroadCaster>("/map", "/vehicle_link");
+    laser_odom_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "/laser_localization", "map", "/lidar", 100);
+    laser_tf_pub_ptr_ = std::make_shared<TFBroadCaster>("map", "/vehicle_link");
 
     matching_ptr_ = std::make_shared<Matching>();
 }
@@ -110,14 +110,15 @@ bool MatchingFlow::UpdateMatching() {
         //
         // Hints: You can use SetGNSSPose & SetScanContextPose from matching.hpp
         //
-
-        // naive implementation:
-        Eigen::Matrix4f init_pose = Eigen::Matrix4f::Identity();
         
-        matching_ptr_->SetInitPose(init_pose);
-        matching_ptr_->SetInited();
-    }
+        // naive implementation:
+        // Eigen::Matrix4f init_pose = Eigen::Matrix4f::Identity();
+        // matching_ptr_->SetInitPose(init_pose);
+        // matching_ptr_->SetInited();
 
+        matching_ptr_->SetGNSSPose(current_gnss_data_.pose);
+        // matching_ptr_->SetScanContextPose(current_cloud_data_);
+    }
     return matching_ptr_->Update(current_cloud_data_, laser_odometry_);
 }
 

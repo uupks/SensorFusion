@@ -1,8 +1,8 @@
 # data storage:
 # a. scan context:
-scan_context_path: /workspace/assignments/03-mapping-and-matching/src/lidar_localization/slam_data/scan_context   
+scan_context_path: /home/uupks/workspace/assignments/03-mapping-and-matching/src/lidar_localization/slam_data/scan_context   
 # b. global map:
-map_path: /workspace/assignments/03-mapping-and-matching/src/lidar_localization/slam_data/map/filtered_map.pcd
+map_path: /home/uupks/workspace/assignments/03-mapping-and-matching/src/lidar_localization/slam_data/map/filtered_map.pcd
 
 # 回环检测:
 loop_closure_method: scan_context # 选择回环检测方法, 目前支持scan_context
@@ -23,7 +23,9 @@ local_map_filter: voxel_filter # 选择滑窗地图点云滤波方法，目前�
 
 # 全局地图
 global_map_filter: voxel_filter # 选择滑窗地图点云滤波方法，目前支持：voxel_filter、no_filter
-
+global_map_origin_longitude: 8.390450
+global_map_origin_latitude: 48.982651
+global_map_origin_altitude: 116.395850
 
 # 各配置选项对应参数
 ## ScanContext params:
