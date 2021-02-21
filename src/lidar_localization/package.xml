@@ -59,14 +59,15 @@
   <build_export_depend>message_generation</build_export_depend>
   <exec_depend>message_runtime</exec_depend>
 
-  <depend>sensor_msgs</depend>
-  <depend>pcl_ros</depend>
+  <depend>rosbag</depend>
   <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
   <depend>tf</depend>
+  <depend>pcl_ros</depend>
   <depend>eigen_conversions</depend>
-  
-
+  <depend>std_srvs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
