@@ -39,6 +39,87 @@ using namespace imu_tk;
 using namespace Eigen;
 using namespace std;
 
+class AnalyticMultiPosAccResidual : public ceres::SizedCostFunction<1, 9> {
+  public:
+    AnalyticMultiPosAccResidual(const double &g_mag, const Eigen::Matrix<double, 3, 1> &sample)
+      : g_mag_(g_mag), sample_(sample) {}
+    
+    virtual ~AnalyticMultiPosAccResidual() {}
+
+    virtual bool Evaluate(double const* const* params, double *residuals, double **jacobians) const {
+        const double Txz = params[0][0];
+        const double Txy = params[0][1];
+        const double Tyx = params[0][2];
+        const double Kx = params[0][3];
+        const double Ky = params[0][4];
+        const double Kz = params[0][5];
+        const double bx = params[0][6];
+        const double by = params[0][7];
+        const double bz = params[0][8];
+        
+        // std::cout<<"g_mag : "<<g_mag_<<std::endl;
+        // std::cout<<"sample : "<<sample_.transpose()<<std::endl;
+
+        // lower triad model
+        Eigen::Matrix<double, 3, 3> T;
+        T << 1, 0, 0, 
+             Txz, 1, 0, 
+             -Txy, Tyx, 1;
+        
+        Eigen::Matrix3d K = Eigen::Matrix3d::Identity();
+        K(0, 0) = Kx;
+        K(1, 1) = Ky;
+        K(2, 2) = Kz;
+
+        Eigen::Vector3d bias(bx, by, bz);
+
+        Eigen::Vector3d calib_samp = T * K * (sample_.col(0) - bias);
+        // std::cout<<"calib_samp : "<<calib_samp.transpose()<<std::endl;
+
+        residuals[0] = g_mag_ - calib_samp.norm();
+
+        if (jacobians != nullptr) {
+            if (jacobians[0] != nullptr) {
+                Eigen::Vector3d x_xnorm = calib_samp / (calib_samp.norm());
+                // 测量值减去bias
+                Eigen::Vector3d v = sample_ - bias;
+                // calib_samp 对参数的偏导
+                Eigen::Matrix<double, 3, 9> J_theta = Eigen::Matrix<double, 3, 9>::Zero();
+                J_theta(0, 3) = v(0);
+                J_theta(0, 6) = -Kx;
+                J_theta(1, 0) = Kx * v(0);
+                J_theta(1, 3) = Txz * v(0);
+                J_theta(1, 4) = v(1);
+                J_theta(1, 6) = -Txz * Kx;
+                J_theta(1, 7) = -Ky;
+                J_theta(2, 1) = -Kx * v(0);
+                J_theta(2, 2) = Ky * v(1);
+                J_theta(2, 3) = -Txy * v(0);
+                J_theta(2, 4) = Tyx * v(1);
+                J_theta(2, 5) = v(2);
+                J_theta(2, 6) = Txy * Kx;
+                J_theta(2, 7) = -Tyx * Ky;
+                J_theta(2, 8) = -Kz;
+                Eigen::Matrix<double, 1, 9> Jaco = - x_xnorm.transpose() * J_theta;
+                jacobians[0][0] = Jaco(0, 0);
+                jacobians[0][1] = Jaco(0, 1);
+                jacobians[0][2] = Jaco(0, 2);
+                jacobians[0][3] = Jaco(0, 3);
+                jacobians[0][4] = Jaco(0, 4);
+                jacobians[0][5] = Jaco(0, 5);
+                jacobians[0][6] = Jaco(0, 6);
+                jacobians[0][7] = Jaco(0, 7);
+                jacobians[0][8] = Jaco(0, 8);
+            }
+        }
+        return true;
+    }
+
+  private:
+    const double g_mag_;
+    const Eigen::Matrix< double, 3 , 1> sample_;
+};
+
 template <typename _T1> struct MultiPosAccResidual
 {
   MultiPosAccResidual( 
@@ -218,9 +299,22 @@ bool MultiPosCalibration_<_T>::calibrateAcc(
     //
     // TODO: implement lower triad model here
     //
-    acc_calib_params[0] = init_acc_calib_.misYZ();
-    acc_calib_params[1] = init_acc_calib_.misZY();
-    acc_calib_params[2] = init_acc_calib_.misZX();
+    // acc_calib_params[0] = init_acc_calib_.misYZ();
+    // acc_calib_params[1] = init_acc_calib_.misZY();
+    // acc_calib_params[2] = init_acc_calib_.misZX();
+    
+    // acc_calib_params[3] = init_acc_calib_.scaleX();
+    // acc_calib_params[4] = init_acc_calib_.scaleY();
+    // acc_calib_params[5] = init_acc_calib_.scaleZ();
+    
+    // acc_calib_params[6] = init_acc_calib_.biasX();
+    // acc_calib_params[7] = init_acc_calib_.biasY();
+    // acc_calib_params[8] = init_acc_calib_.biasZ();
+    
+    // lower triad model
+    acc_calib_params[0] = init_acc_calib_.misXZ();
+    acc_calib_params[1] = init_acc_calib_.misXY();
+    acc_calib_params[2] = init_acc_calib_.misYX();
     
     acc_calib_params[3] = init_acc_calib_.scaleX();
     acc_calib_params[4] = init_acc_calib_.scaleY();
@@ -253,15 +347,19 @@ bool MultiPosCalibration_<_T>::calibrateAcc(
     ceres::Problem problem;
     for( int i = 0; i < static_samples.size(); i++)
     {
-      ceres::CostFunction* cost_function = MultiPosAccResidual<_T>::Create ( 
-        g_mag_, static_samples[i].data() 
-      );
+      // ceres::CostFunction* cost_function = MultiPosAccResidual<_T>::Create ( 
+      //   g_mag_, static_samples[i].data() 
+      // );
 
-      problem.AddResidualBlock ( 
-        cost_function,           /* error fuction */
-        NULL,                    /* squared loss */
-        acc_calib_params.data()  /* accel deterministic error params */
-      ); 
+      // problem.AddResidualBlock ( 
+      //   cost_function,           /* error fuction */
+      //   NULL,                    /* squared loss */
+      //   acc_calib_params.data()  /* accel deterministic error params */
+      // ); 
+      
+      // AnalyticMultiPosAccResidual
+      ceres::CostFunction* cost_function = new AnalyticMultiPosAccResidual(g_mag_, static_samples[i].data());
+      problem.AddResidualBlock(cost_function, NULL, acc_calib_params.data());
     }
     
     ceres::Solver::Options options;
@@ -291,10 +389,22 @@ bool MultiPosCalibration_<_T>::calibrateAcc(
     //
     // TODO: implement lower triad model here
     // 
+    // min_cost_calib_params[0],
+    // min_cost_calib_params[1],
+    // min_cost_calib_params[2],
+    // 0,0,0,
+    // min_cost_calib_params[3],
+    // min_cost_calib_params[4],
+    // min_cost_calib_params[5],
+    // min_cost_calib_params[6],
+    // min_cost_calib_params[7],
+    // min_cost_calib_params[8] 
+
+    // lower triad model
+    0,0,0,
     min_cost_calib_params[0],
     min_cost_calib_params[1],
     min_cost_calib_params[2],
-    0,0,0,
     min_cost_calib_params[3],
     min_cost_calib_params[4],
     min_cost_calib_params[5],
@@ -466,4 +576,4 @@ template <typename _T>
 }
 
 template class MultiPosCalibration_<double>;
-template class MultiPosCalibration_<float>;
+// template class MultiPosCalibration_<float>;
