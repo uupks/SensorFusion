@@ -273,11 +273,11 @@ public:
   void setGravityMagnitude( _T g ){ g_mag_ = g; };
   
   /** @brief Set the duration in seconds of the initial static interval. Default 30 seconds. */
-  _T setInitStaticIntervalDuration( _T duration ) { init_interval_duration_ = duration; };
+  _T setInitStaticIntervalDuration( _T duration ) { init_interval_duration_ = duration; return duration;};
   
   /** @brief Set the number of data samples to be extracted from each detected static intervals.
    *         Default is 100.  */
-  int setIntarvalsNumSamples( int num ) { interval_n_samples_ = num; };
+  int setIntarvalsNumSamples( int num ) { interval_n_samples_ = num; return 0;};
   
   /** @brief Set the accelerometers initial guess calibration parameters */  
   void setInitAccCalibration( CalibratedTriad_<_T> &init_calib ){ init_acc_calib_ = init_calib; };
@@ -300,7 +300,7 @@ public:
   /** @brief If the parameter enabled is true, the gyroscopes biases are estimated along
    *         with the calibration parameters. If false, the gyroscopes biases 
    *         (computed in the initial static period) are assumed known. */ 
-  bool enableGyroBiasOptimization( bool enabled  ) { optimize_gyro_bias_ = enabled; };
+  bool enableGyroBiasOptimization( bool enabled  ) { optimize_gyro_bias_ = enabled; return true;};
   
   /** @brief If the parameter enabled is true, verbose output is activeted  */   
   void enableVerboseOutput( bool enabled ){ verbose_output_ = enabled; };
