@@ -7,3 +7,5 @@
 ### [第三章作业](./doc/Lecture3_Homework/README.md)
 
 ### [第四章作业](./doc/Lecture4_Homework/README.md)
+
+### [第五章作业](./doc/Lecture5_Homework/README.md)
