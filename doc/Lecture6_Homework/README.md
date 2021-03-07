@@ -9,18 +9,14 @@ cd gnss-ins-sim
 sudo python setup.py install
 ```
 
-为什么buffer的长度要小于等于3？实际解算的第一个作为上一次的IMUData，那当前IMUData设为第几个呢？
+~~为什么buffer的长度要小于等于3？实际解算的第一个作为上一次的IMUData，那当前IMUData设为第几个呢？~~
 ```cpp
 if (imu_data_buff_.size() < static_cast<size_t>(3))
     return false;
 ```
+可以通过选取不同的当前IMUData完成变步长积分
 
 ## 基于中值法的解算
-选择`IMUDataBuffer`中的第二个为当前`IMUData`进行解算
-```cpp
-IMUData imu_data_curr = imu_data_buff_.at(1);
-MidPointIntegration(imu_data_curr);
-```
 
 ```cpp
 void Activity::MidPointIntegration(const IMUData& imu_data_curr) {
@@ -64,15 +60,15 @@ void Activity::MidPointIntegration(const IMUData& imu_data_curr) {
 基于`ROS`的`message_filters::sync_policies::ApproximateTime`获取同一时刻的真值位姿和估算位姿，然后保存成`txt`文件，用`evo`工具进行对比分析，详见[evaluation/node.cpp](../../src/imu_integration/src/evaluation/node.cpp)
 
 ## 中值法和欧拉法对比分析
-
-### 轨迹对比
-![traj](./data/trajectory.png)
-![xyz](./data/xyz_view.png)
-![rpy](./data/rpy_view.png)
-### 误差分析
+### 间隔一个IMUData，步长为1
+#### 轨迹对比
+![traj](./data/step1/trajectory.png)
+![xyz](./data/step1/xyz_view.png)
+![rpy](./data/step1/rpy_view.png)
+#### 误差分析
 * 中值法
-  ![mid_point_traj](./data/mid_point_traj.png)
-  ![mid_point_ape](./data/mid_point_ape.png)
+  ![mid_point_traj](./data/step1/mid_point_traj.png)
+  ![mid_point_ape](./data/step1/mid_point_ape.png)
   ```bash
   APE w.r.t. full transformation (unit-less)
        max	0.004440
@@ -85,8 +81,8 @@ void Activity::MidPointIntegration(const IMUData& imu_data_curr) {
   ```
 
 * 欧拉法
-  ![euler_traj](./data/euler_traj.png)
-  ![euler_ape](./data/euler_ape.png)
+  ![euler_traj](./data/step1/euler_traj.png)
+  ![euler_ape](./data/step1/euler_ape.png)
   ```bash
     APE w.r.t. full transformation (unit-less)
          max	1.582622
@@ -97,8 +93,39 @@ void Activity::MidPointIntegration(const IMUData& imu_data_curr) {
          sse	1092.166059
          std	0.419133
   ```
-
-可以看出，在作业中的运动情况下，中值法解算位姿相较于欧拉法，误差累计较慢，精度较高。
+### 间隔两个IMUData，步长为2
+#### 轨迹对比
+![traj](./data/step2/traj.png)
+![xyz](./data/step2/xyz_view.png)
+![rpy](./data/step2/rpy_view.png)
+#### 误差分析
+  ![mid_point_traj](./data/step2/mid_point_traj.png)
+  ![mid_point_ape](./data/step2/mid_point_ape.png)
+* 中值法
+  ```text
+  APE w.r.t. full transformation (unit-less)
+       max	0.035714
+      mean	0.017071
+    median	0.016609
+       min	0.000013
+      rmse	0.019856
+       sse	0.486518
+       std	0.010141
+  ```
+* 欧拉法
+  ![euler_traj](./data/step2/euler_traj.png)
+  ![euler_ape](./data/step2/euler_ape.png)
+  ```text
+  APE w.r.t. full transformation (unit-less)
+       max	8.892604
+      mean	2.955480
+    median	2.133966
+       min	0.004809
+      rmse	3.965236
+       sse	19402.303659
+       std	2.643527
+  ```
+可以看出，在作业中的运动情况下，中值法解算位姿相较于欧拉法，误差累积较慢，精度较高，对于欧拉法来说，积分时间步长越大，误差累积越快。
 
 ## 不同运动状况下中值法和欧拉法对比分析
 

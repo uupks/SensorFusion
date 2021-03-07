@@ -133,12 +133,14 @@ bool Activity::UpdatePose(void) {
         //
         // TODO: implement your estimation here
         //
-        IMUData imu_data_curr = imu_data_buff_.at(1);
+        IMUData imu_data_curr = imu_data_buff_.at(2);
         MidPointIntegration(imu_data_curr);
         EulerIntegration(imu_data_curr);
         timestamp_ = imu_data_curr.time;
         last_imu_data = imu_data_curr;
-        imu_data_buff_.pop_front();
+        // imu_data_buff_.pop_front();
+        imu_data_buff_.clear();
+        imu_data_buff_.push_back(imu_data_curr);
     }
     
     return true;

@@ -76,17 +76,17 @@ def get_gnss_ins_sim(motion_def_file, fs_imu, fs_gps):
             len(sim.dmgr.get_data_all('gyro').data[0])
         )
     )
-
     # imu measurements:
     step_size = 1.0 / fs_imu
-    for i, (gyro, accel) in enumerate(  
+    for i, (gyro, accel, ref_pos, ref_att_quat, ref_vel) in enumerate(  
         zip(
             # a. gyro
             sim.dmgr.get_data_all('gyro').data[0], 
             # b. accel
             sim.dmgr.get_data_all('accel').data[0],
             sim.dmgr.get_data_all('ref_pos').data[0],
-            sim.dmgr.get_data_all('ref_att_quat').data[0]
+            sim.dmgr.get_data_all('ref_att_quat').data[0],
+            sim.dmgr.get_data_all('ref_vel').data[0]
         )
     ):
         yield {
@@ -108,7 +108,11 @@ def get_gnss_ins_sim(motion_def_file, fs_imu, fs_gps):
                 'ref_att_quat_x': ref_att_quat[0],
                 'ref_att_quat_y': ref_att_quat[1],
                 'ref_att_quat_z': ref_att_quat[2],
-                'ref_att_quat_w': ref_att_quat[3]
+                'ref_att_quat_w': ref_att_quat[3],
+                # e. ref_vel:
+                'ref_vel_x': ref_vel[0],
+                'ref_vel_y': ref_vel[1],
+                'ref_vel_z': ref_vel[2],
             }
         }
 
@@ -182,9 +186,12 @@ def gnss_ins_sim_recorder():
             odom_msg.orientation.z = measurement['data']['ref_att_quat_z']
             odom_msg.orientation.w = measurement['data']['ref_att_quat_w']
             # b. set position
-            odom_msg.
+            odom_msg.twist.twist.linear.x = measurement['data']['ref_vel_x']
+            odom_msg.twist.twist.linear.y = measurement['data']['ref_vel_y']
+            odom_msg.twist.twist.linear.z = measurement['data']['ref_vel_z']
             # write:
             bag.write(topic_name_imu, msg, msg.header.stamp)
+            bag.write("/pose/ground_truth", odom_msg, odom_msg.header.stamp)
 
 if __name__ == '__main__':
     try:
