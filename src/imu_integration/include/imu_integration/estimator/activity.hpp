@@ -96,7 +96,22 @@ class Activity {
      * @return void
      */
     void UpdatePosition(const double &delta_t, const Eigen::Vector3d &velocity_delta);
+    
+    /**
+     * @brief 中值积分
+     * 
+     */
+    void MidPointIntegration(const IMUData& imu_data_curr);
 
+    /**
+     * @brief 欧拉积分
+     */
+    void EulerIntegration(const IMUData& imu_data_curr);
+    /**
+     * @brief 四阶龙格库塔积分
+     * 
+     */
+    void RK4Integration();
   private:
     // node handler:
     ros::NodeHandle private_nh_;
@@ -105,6 +120,7 @@ class Activity {
     std::shared_ptr<IMUSubscriber> imu_sub_ptr_;
     std::shared_ptr<OdomSubscriber> odom_ground_truth_sub_ptr;
     ros::Publisher odom_estimation_pub_;
+    ros::Publisher odom_euler_estimation_pub_;
 
     // data buffer:
     std::deque<IMUData> imu_data_buff_;
@@ -124,10 +140,21 @@ class Activity {
     Eigen::Vector3d linear_acc_bias_;
 
     // IMU pose estimation:
+    // Mid-Point
     Eigen::Matrix4d pose_ = Eigen::Matrix4d::Identity();
     Eigen::Vector3d vel_ = Eigen::Vector3d::Zero();
+    // Euler 
+    Eigen::Matrix4d euler_pose_ = Eigen::Matrix4d::Identity();
+    Eigen::Vector3d euler_vel_ = Eigen::Vector3d::Zero();
+    // Runge-Kutta
+    Eigen::Matrix4d rk_pose_ = Eigen::Matrix4d::Identity();
+    Eigen::Vector3d rk_vel_ = Eigen::Vector3d::Zero();
 
+    IMUData last_imu_data;
+    double timestamp_;
     nav_msgs::Odometry message_odom_;
+    nav_msgs::Odometry euler_estimation_;
+
 };
 
 } // namespace estimator

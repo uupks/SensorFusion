@@ -79,12 +79,14 @@ def get_gnss_ins_sim(motion_def_file, fs_imu, fs_gps):
 
     # imu measurements:
     step_size = 1.0 / fs_imu
-    for i, (gyro, accel) in enumerate(
+    for i, (gyro, accel) in enumerate(  
         zip(
             # a. gyro
             sim.dmgr.get_data_all('gyro').data[0], 
             # b. accel
-            sim.dmgr.get_data_all('accel').data[0]
+            sim.dmgr.get_data_all('accel').data[0],
+            sim.dmgr.get_data_all('ref_pos').data[0],
+            sim.dmgr.get_data_all('ref_att_quat').data[0]
         )
     ):
         yield {
@@ -97,7 +99,16 @@ def get_gnss_ins_sim(motion_def_file, fs_imu, fs_gps):
                 # b. accel:
                 'accel_x': accel[0],
                 'accel_y': accel[1],
-                'accel_z': accel[2]
+                'accel_z': accel[2],
+                # c. ref_pos:
+                'ref_pos_x': ref_pos[0],
+                'ref_pos_y': ref_pos[1],
+                'ref_pos_z': ref_pos[2],
+                # d. ref_att_quat:
+                'ref_att_quat_x': ref_att_quat[0],
+                'ref_att_quat_y': ref_att_quat[1],
+                'ref_att_quat_z': ref_att_quat[2],
+                'ref_att_quat_w': ref_att_quat[3]
             }
         }
 
@@ -140,8 +151,9 @@ def gnss_ins_sim_recorder():
             # init:
             msg = Imu()
             # a. set header:
+            time_stamp = timestamp_start + rospy.Duration.from_sec(measurement['stamp'])
             msg.header.frame_id = 'NED'
-            msg.header.stamp = timestamp_start + rospy.Duration.from_sec(measurement['stamp'])
+            msg.header.stamp = time_stamp
             # b. set orientation estimation:
             msg.orientation.x = 0.0
             msg.orientation.y = 0.0
@@ -155,6 +167,22 @@ def gnss_ins_sim_recorder():
             msg.linear_acceleration.y = measurement['data']['accel_y']
             msg.linear_acceleration.z = measurement['data']['accel_z']
 
+            odom_msg = Odometry()
+            odom_msg.header.frame_id = 'ENU'
+            odom_msg.child_frame_id = 'ENU'
+
+            odom_msg.header.stamp = time_stamp
+            # a. set orientation :
+            odom_msg.pose.pose.x = measurement['data']['ref_pos_x']
+            odom_msg.pose.pose.y = measurement['data']['ref_pos_y']
+            odom_msg.pose.pose.z = measurement['data']['ref_pos_z']
+
+            odom_msg.orientation.x = measurement['data']['ref_att_quat_x']
+            odom_msg.orientation.y = measurement['data']['ref_att_quat_y']
+            odom_msg.orientation.z = measurement['data']['ref_att_quat_z']
+            odom_msg.orientation.w = measurement['data']['ref_att_quat_w']
+            # b. set position
+            odom_msg.
             # write:
             bag.write(topic_name_imu, msg, msg.header.stamp)
 

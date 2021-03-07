@@ -1,5 +1,6 @@
 # motion def:
-motion_file: allan_variance_analysis.csv
+# motion_file: allan_variance_analysis.csv
+motion_file: demo.csv
 # IMU params:
 imu: 1
 # sample frequency of simulated GNSS/IMU data:

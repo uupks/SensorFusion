@@ -55,10 +55,11 @@ void Activity::Init(void) {
     // parse odom config:
     private_nh_.param("pose/frame_id", odom_config_.frame_id, std::string("inertial"));
     private_nh_.param("pose/topic_name/ground_truth", odom_config_.topic_name.ground_truth, std::string("/pose/ground_truth"));
-    private_nh_.param("pose/topic_name/estimation", odom_config_.topic_name.estimation, std::string("/pose/estimation"));
+    private_nh_.param("pose/topic_name/estimation", odom_config_.topic_name.estimation, std::string("/pose/mid_point_estimation"));
 
     odom_ground_truth_sub_ptr = std::make_shared<OdomSubscriber>(private_nh_, odom_config_.topic_name.ground_truth, 1000000);
     odom_estimation_pub_ = private_nh_.advertise<nav_msgs::Odometry>(odom_config_.topic_name.estimation, 500);
+    odom_euler_estimation_pub_ = private_nh_.advertise<nav_msgs::Odometry>("/pose/euler_estimation", 500);
 }
 
 bool Activity::Run(void) {
@@ -114,6 +115,12 @@ bool Activity::UpdatePose(void) {
         pose_ = odom_data.pose;
         vel_ = odom_data.vel;
 
+        euler_pose_ = odom_data.pose;
+        euler_vel_ = odom_data.vel;
+
+        rk_pose_ = odom_data.pose;
+        rk_vel_ = odom_data.vel;
+
         initialized_ = true;
 
         odom_data_buff_.clear();
@@ -121,29 +128,99 @@ bool Activity::UpdatePose(void) {
 
         // keep the latest IMU measurement for mid-value integration:
         imu_data_buff_.push_back(imu_data);
+        last_imu_data = imu_data;
     } else {
         //
         // TODO: implement your estimation here
         //
-        // get deltas:
-
-        // update orientation:
-
-        // get velocity delta:
-
-        // update position:
-
-        // move forward -- 
-        // NOTE: this is NOT fixed. you should update your buffer according to the method of your choice:
+        IMUData imu_data_curr = imu_data_buff_.at(1);
+        MidPointIntegration(imu_data_curr);
+        EulerIntegration(imu_data_curr);
+        timestamp_ = imu_data_curr.time;
+        last_imu_data = imu_data_curr;
         imu_data_buff_.pop_front();
     }
     
     return true;
 }
 
+void Activity::MidPointIntegration(const IMUData& imu_data_curr) {
+    auto imu_data_prev = last_imu_data;
+
+    double dt = imu_data_curr.time - imu_data_prev.time;
+
+    // 解算姿态
+    Eigen::Vector3d angular_delta;
+    angular_delta = (imu_data_prev.angular_velocity - angular_vel_bias_ + imu_data_curr.angular_velocity - angular_vel_bias_) * dt / 2.0;
+    double angular_mag = angular_delta.norm();
+    
+    Eigen::Vector3d angular_delta_dir = angular_delta.normalized();
+    double delta_sin = sin(angular_mag / 2.0);
+    double delta_cos = cos(angular_mag / 2.0);
+    
+    Eigen::Quaterniond dq;
+    dq.w() = delta_cos;
+    dq.x() = delta_sin * angular_delta_dir.x();
+    dq.y() = delta_sin * angular_delta_dir.y();
+    dq.z() = delta_sin * angular_delta_dir.z();
+    Eigen::Quaterniond q_prev(pose_.block<3,3>(0,0));
+    Eigen::Quaterniond q_cur = q_prev * dq;
+    q_cur.normalize();
+
+    // 解算速度
+    Eigen::Vector3d acc_prev = q_prev * (imu_data_prev.linear_acceleration - linear_acc_bias_) - G_;
+    Eigen::Vector3d acc_cur = q_cur * (imu_data_curr.linear_acceleration - linear_acc_bias_) - G_;
+    Eigen::Vector3d delta_velocity = (acc_prev + acc_cur) * dt / 2.0;
+    Eigen::Vector3d cur_velocity = vel_ + delta_velocity;
+    // 解算位置
+    Eigen::Vector3d pos_prev = pose_.block<3,1>(0,3);
+    Eigen::Vector3d pos_cur = pos_prev + (cur_velocity + vel_) * dt / 2.0;
+
+    pose_.block<3,3>(0,0) = q_cur.toRotationMatrix();
+    pose_.block<3,1>(0,3) = pos_cur;
+    vel_ = cur_velocity;
+}
+
+
+void Activity::EulerIntegration(const IMUData& imu_data_curr){
+    auto imu_data_prev = last_imu_data;
+
+    double dt = imu_data_curr.time - imu_data_prev.time;
+    // 解算姿态
+    Eigen::Vector3d angular_delta;
+    angular_delta = imu_data_prev.angular_velocity * dt;
+    double angular_mag = angular_delta.norm();
+
+    Eigen::Vector3d angular_delta_dir = angular_delta.normalized();
+    double delta_sin = sin(angular_mag / 2.0);
+    double delta_cos = cos(angular_mag / 2.0);
+    Eigen::Quaterniond dq;
+    dq.w() = delta_cos;
+    dq.x() = delta_sin * angular_delta_dir.x();
+    dq.y() = delta_sin * angular_delta_dir.y();
+    dq.z() = delta_sin * angular_delta_dir.z();
+    Eigen::Quaterniond q_prev(euler_pose_.block<3,3>(0,0));
+    Eigen::Quaterniond q_cur = q_prev * dq;
+    q_cur.normalize();
+
+    // 解算速度
+    Eigen::Vector3d acc_prev = q_prev * (imu_data_prev.linear_acceleration - linear_acc_bias_) - G_;
+    Eigen::Vector3d delta_velocity = acc_prev * dt;
+    Eigen::Vector3d cur_velocity = euler_vel_ + delta_velocity;
+
+    // 解算位置
+    Eigen::Vector3d pos_prev = euler_pose_.block<3,1>(0,3);
+    Eigen::Vector3d pos_cur = pos_prev + euler_vel_ * dt + 0.5 * acc_prev * dt * dt;
+
+    euler_pose_.block<3,3>(0,0) = q_cur.toRotationMatrix();
+    euler_pose_.block<3,1>(0,3) = pos_cur;
+    euler_vel_ = cur_velocity;
+}
+
+
 bool Activity::PublishPose() {
     // a. set header:
-    message_odom_.header.stamp = ros::Time::now();
+    message_odom_.header.stamp = ros::Time(timestamp_);
     message_odom_.header.frame_id = odom_config_.frame_id;
     
     // b. set child frame id:
@@ -169,6 +246,31 @@ bool Activity::PublishPose() {
 
     odom_estimation_pub_.publish(message_odom_);
 
+    // publish euler estimation
+    euler_estimation_.header.stamp = ros::Time(timestamp_);
+    euler_estimation_.header.frame_id = odom_config_.frame_id;
+    
+    // b. set child frame id:
+    euler_estimation_.child_frame_id = odom_config_.frame_id;
+
+    // b. set orientation:
+    Eigen::Quaterniond q_euler(euler_pose_.block<3, 3>(0, 0));
+    euler_estimation_.pose.pose.orientation.x = q_euler.x();
+    euler_estimation_.pose.pose.orientation.y = q_euler.y();
+    euler_estimation_.pose.pose.orientation.z = q_euler.z();
+    euler_estimation_.pose.pose.orientation.w = q_euler.w();
+
+    // c. set position:
+    Eigen::Vector3d t_euler = euler_pose_.block<3, 1>(0, 3);
+    euler_estimation_.pose.pose.position.x = t_euler.x();
+    euler_estimation_.pose.pose.position.y = t_euler.y();
+    euler_estimation_.pose.pose.position.z = t_euler.z();
+
+    // d. set velocity:
+    euler_estimation_.twist.twist.linear.x = euler_vel_.x();
+    euler_estimation_.twist.twist.linear.y = euler_vel_.y();
+    euler_estimation_.twist.twist.linear.z = euler_vel_.z(); 
+    odom_euler_estimation_pub_.publish(euler_estimation_);
     return true;
 }
 
@@ -314,7 +416,7 @@ void Activity::UpdatePosition(const double &delta_t, const Eigen::Vector3d &velo
     //
     // TODO: this could be a helper routine for your own implementation
     //
-    pose_.block<3, 1>(0, 3) += delta_t*vel_ + 0.5*delta_t*velocity_delta;
+    pose_.block<3, 1>(0, 3) += delta_t*vel_ + 0.5*delta_t*delta_t*velocity_delta;
     vel_ += velocity_delta;
 }
 
