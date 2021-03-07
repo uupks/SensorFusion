@@ -99,9 +99,9 @@ void Activity::MidPointIntegration(const IMUData& imu_data_curr) {
 ![xyz](./data/step2/xyz_view.png)
 ![rpy](./data/step2/rpy_view.png)
 #### 误差分析
+* 中值法
   ![mid_point_traj](./data/step2/mid_point_traj.png)
   ![mid_point_ape](./data/step2/mid_point_ape.png)
-* 中值法
   ```text
   APE w.r.t. full transformation (unit-less)
        max	0.035714
