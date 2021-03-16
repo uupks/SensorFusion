@@ -14,8 +14,8 @@ namespace lidar_localization {
 class GNSSData {
   public:
     double time = 0.0;
-    double longitude = 0.0;
     double latitude = 0.0;
+    double longitude = 0.0;
     double altitude = 0.0;
     double local_E = 0.0;
     double local_N = 0.0;
@@ -34,6 +34,12 @@ class GNSSData {
   public: 
     void InitOriginPosition();
     void UpdateXYZ();
+
+    static void Reverse(
+      const double &local_E, const double &local_N, const double &local_U,
+      double &lat, double &lon, double &alt
+    );
+
     static bool SyncData(std::deque<GNSSData>& UnsyncedData, std::deque<GNSSData>& SyncedData, double sync_time);
 };
 }

@@ -6,35 +6,43 @@
 #include "lidar_localization/sensor_data/gnss_data.hpp"
 
 #include "glog/logging.h"
+#include <ostream>
 
 //静态成员变量必须在类外初始化
-double global_map_origin_longitude = 8.390450;
-double global_map_origin_latitude = 48.982651;
-double global_map_origin_altitude = 116.395850;
-
-double lidar_localization::GNSSData::origin_longitude = 0.0;
 double lidar_localization::GNSSData::origin_latitude = 0.0;
+double lidar_localization::GNSSData::origin_longitude = 0.0;
 double lidar_localization::GNSSData::origin_altitude = 0.0;
 bool lidar_localization::GNSSData::origin_position_inited = false;
 GeographicLib::LocalCartesian lidar_localization::GNSSData::geo_converter;
 
 namespace lidar_localization {
 void GNSSData::InitOriginPosition() {
-    geo_converter.Reset(global_map_origin_latitude, global_map_origin_longitude, global_map_origin_altitude);
+    geo_converter.Reset(latitude, longitude, altitude);
 
-    origin_longitude = global_map_origin_longitude;
-    origin_latitude = global_map_origin_latitude;
-    origin_altitude = global_map_origin_altitude;
-    printf("GNSSData origin : [%f, %f, %f]\n", GNSSData::origin_latitude, GNSSData::origin_longitude, GNSSData::origin_altitude);
+    origin_latitude = latitude;
+    origin_longitude = longitude;
+    origin_altitude = altitude;
 
     origin_position_inited = true;
 }
 
 void GNSSData::UpdateXYZ() {
     if (!origin_position_inited) {
-        LOG(WARNING) << "GeoConverter has not set origin position";
+        LOG(WARNING) << "WARNING: GeoConverter is NOT initialized.";
     }
+
     geo_converter.Forward(latitude, longitude, altitude, local_E, local_N, local_U);
+}
+
+void GNSSData::Reverse(
+    const double &local_E, const double &local_N, const double &local_U,
+    double &lat, double &lon, double &alt
+) {
+    if (!origin_position_inited) {
+        LOG(WARNING) << "WARNING: GeoConverter is NOT initialized.";
+    }
+
+    geo_converter.Reverse(local_E, local_N, local_U, lat, lon, alt);
 }
 
 bool GNSSData::SyncData(std::deque<GNSSData>& UnsyncedData, std::deque<GNSSData>& SyncedData, double sync_time) {
@@ -80,4 +88,5 @@ bool GNSSData::SyncData(std::deque<GNSSData>& UnsyncedData, std::deque<GNSSData>
     
     return true;
 }
+
 }

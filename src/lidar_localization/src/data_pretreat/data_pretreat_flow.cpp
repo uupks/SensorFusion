@@ -10,7 +10,7 @@
 
 namespace lidar_localization {
 DataPretreatFlow::DataPretreatFlow(ros::NodeHandle& nh, std::string cloud_topic) {
-    // subscriber
+    // subscribers:
     // a. velodyne measurement:
     cloud_sub_ptr_ = std::make_shared<CloudSubscriber>(nh, "/kitti/velo/pointcloud", 100000);
     // b. OXTS IMU:
@@ -21,8 +21,10 @@ DataPretreatFlow::DataPretreatFlow(ros::NodeHandle& nh, std::string cloud_topic)
     gnss_sub_ptr_ = std::make_shared<GNSSSubscriber>(nh, "/kitti/oxts/gps/fix", 1000000);
     lidar_to_imu_ptr_ = std::make_shared<TFListener>(nh, "/imu_link", "/velo_link");
 
-    // publisher
+    // publishers:
     cloud_pub_ptr_ = std::make_shared<CloudPublisher>(nh, cloud_topic, "/velo_link", 100);
+    imu_pub_ptr_ = std::make_shared<IMUPublisher>(nh, "/synced_imu", "/imu_link", 100);
+    pos_vel_pub_ptr_ = std::make_shared<PosVelPublisher>(nh, "/synced_pos_vel", "map", "/imu_link", 100);
     gnss_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "/synced_gnss", "map", "/velo_link", 100);
 
     // motion compensation for lidar measurement:
@@ -102,7 +104,6 @@ bool DataPretreatFlow::InitGNSS() {
     static bool gnss_inited = false;
     if (!gnss_inited) {
         GNSSData gnss_data = gnss_data_buff_.front();
-        printf("First GNSS : [%f, %f, %f]\n", gnss_data.longitude, gnss_data.latitude, gnss_data.altitude);
         gnss_data.InitOriginPosition();
         gnss_inited = true;
     }
@@ -132,6 +133,9 @@ bool DataPretreatFlow::ValidData() {
     double diff_imu_time = current_cloud_data_.time - current_imu_data_.time;
     double diff_velocity_time = current_cloud_data_.time - current_velocity_data_.time;
     double diff_gnss_time = current_cloud_data_.time - current_gnss_data_.time;
+    //
+    // this check assumes the frequency of lidar is 10Hz:
+    //
     if (diff_imu_time < -0.05 || diff_velocity_time < -0.05 || diff_gnss_time < -0.05) {
         cloud_data_buff_.pop_front();
         return false;
@@ -161,21 +165,29 @@ bool DataPretreatFlow::ValidData() {
 }
 
 bool DataPretreatFlow::TransformData() {
-    // get GNSS & IMU pose prior:
+    // a. get reference pose:
     gnss_pose_ = Eigen::Matrix4f::Identity();
-    // a. get position from GNSS
+    // get position from GNSS
     current_gnss_data_.UpdateXYZ();
     gnss_pose_(0,3) = current_gnss_data_.local_E;
     gnss_pose_(1,3) = current_gnss_data_.local_N;
     gnss_pose_(2,3) = current_gnss_data_.local_U;
-    // b. get orientation from IMU:
+    // get orientation from IMU:
     gnss_pose_.block<3,3>(0,0) = current_imu_data_.GetOrientationMatrix();
     // this is lidar pose in GNSS/map frame:
     gnss_pose_ *= lidar_to_imu_;
 
-    // this is lidar velocity:
+    // b. set synced pos vel
+    pos_vel_.pos.x() = current_gnss_data_.local_E;
+    pos_vel_.pos.y() = current_gnss_data_.local_N;
+    pos_vel_.pos.z() = current_gnss_data_.local_U;
+
+    pos_vel_.vel.x() = current_velocity_data_.linear_velocity.x;
+    pos_vel_.vel.y() = current_velocity_data_.linear_velocity.y;
+    pos_vel_.vel.z() = current_velocity_data_.linear_velocity.z;
+
+    // c. motion compensation for lidar measurements:
     current_velocity_data_.TransformCoordinate(lidar_to_imu_);
-    // motion compensation for lidar measurements:
     distortion_adjust_ptr_->SetMotionInfo(0.1, current_velocity_data_);
     distortion_adjust_ptr_->AdjustCloud(current_cloud_data_.cloud_ptr, current_cloud_data_.cloud_ptr);
 
@@ -184,8 +196,18 @@ bool DataPretreatFlow::TransformData() {
 
 bool DataPretreatFlow::PublishData() {
     cloud_pub_ptr_->Publish(current_cloud_data_.cloud_ptr, current_cloud_data_.time);
-    gnss_pub_ptr_->Publish(gnss_pose_, current_gnss_data_.time);
+    imu_pub_ptr_->Publish(current_imu_data_, current_cloud_data_.time);
 
+    pos_vel_pub_ptr_->Publish(pos_vel_, current_cloud_data_.time);
+    
+    //
+    // this synced odometry has the following info:
+    //
+    // a. lidar frame's pose in map
+    // b. lidar frame's velocity 
+    gnss_pub_ptr_->Publish(gnss_pose_, current_velocity_data_, current_cloud_data_.time);
+
+    
     return true;
 }
 }
