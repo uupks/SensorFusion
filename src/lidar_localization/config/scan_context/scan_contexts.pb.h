@@ -53,13 +53,12 @@ struct TableStruct_scan_5fcontexts_2eproto {
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_scan_5fcontexts_2eproto;
-::PROTOBUF_NAMESPACE_ID::Metadata descriptor_table_scan_5fcontexts_2eproto_metadata_getter(int index);
 namespace scan_context_io {
 class ScanContext;
-struct ScanContextDefaultTypeInternal;
+class ScanContextDefaultTypeInternal;
 extern ScanContextDefaultTypeInternal _ScanContext_default_instance_;
 class ScanContexts;
-struct ScanContextsDefaultTypeInternal;
+class ScanContextsDefaultTypeInternal;
 extern ScanContextsDefaultTypeInternal _ScanContexts_default_instance_;
 }  // namespace scan_context_io
 PROTOBUF_NAMESPACE_OPEN
@@ -75,7 +74,6 @@ class ScanContext PROTOBUF_FINAL :
  public:
   inline ScanContext() : ScanContext(nullptr) {}
   virtual ~ScanContext();
-  explicit constexpr ScanContext(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   ScanContext(const ScanContext& from);
   ScanContext(ScanContext&& from) noexcept
@@ -112,9 +110,8 @@ class ScanContext PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const ScanContext& default_instance() {
-    return *internal_default_instance();
-  }
+  static const ScanContext& default_instance();
+
   static inline const ScanContext* internal_default_instance() {
     return reinterpret_cast<const ScanContext*>(
                &_ScanContext_default_instance_);
@@ -180,7 +177,8 @@ class ScanContext PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    return ::descriptor_table_scan_5fcontexts_2eproto_metadata_getter(kIndexInFileMessages);
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_scan_5fcontexts_2eproto);
+    return ::descriptor_table_scan_5fcontexts_2eproto.file_level_metadata[kIndexInFileMessages];
   }
 
   public:
@@ -232,7 +230,6 @@ class ScanContexts PROTOBUF_FINAL :
  public:
   inline ScanContexts() : ScanContexts(nullptr) {}
   virtual ~ScanContexts();
-  explicit constexpr ScanContexts(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   ScanContexts(const ScanContexts& from);
   ScanContexts(ScanContexts&& from) noexcept
@@ -269,9 +266,8 @@ class ScanContexts PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const ScanContexts& default_instance() {
-    return *internal_default_instance();
-  }
+  static const ScanContexts& default_instance();
+
   static inline const ScanContexts* internal_default_instance() {
     return reinterpret_cast<const ScanContexts*>(
                &_ScanContexts_default_instance_);
@@ -337,7 +333,8 @@ class ScanContexts PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    return ::descriptor_table_scan_5fcontexts_2eproto_metadata_getter(kIndexInFileMessages);
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_scan_5fcontexts_2eproto);
+    return ::descriptor_table_scan_5fcontexts_2eproto.file_level_metadata[kIndexInFileMessages];
   }
 
   public:

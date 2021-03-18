@@ -16,34 +16,44 @@
 #include <google/protobuf/port_def.inc>
 
 PROTOBUF_PRAGMA_INIT_SEG
+extern PROTOBUF_INTERNAL_EXPORT_scan_5fcontexts_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ScanContext_scan_5fcontexts_2eproto;
 namespace scan_context_io {
-constexpr ScanContext::ScanContext(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : data_(){}
-struct ScanContextDefaultTypeInternal {
-  constexpr ScanContextDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~ScanContextDefaultTypeInternal() {}
-  union {
-    ScanContext _instance;
-  };
-};
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_NO_DESTROY ScanContextDefaultTypeInternal _ScanContext_default_instance_;
-constexpr ScanContexts::ScanContexts(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : data_()
-  , num_rings_(0)
-  , num_sectors_(0){}
-struct ScanContextsDefaultTypeInternal {
-  constexpr ScanContextsDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~ScanContextsDefaultTypeInternal() {}
-  union {
-    ScanContexts _instance;
-  };
-};
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_NO_DESTROY ScanContextsDefaultTypeInternal _ScanContexts_default_instance_;
+class ScanContextDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<ScanContext> _instance;
+} _ScanContext_default_instance_;
+class ScanContextsDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<ScanContexts> _instance;
+} _ScanContexts_default_instance_;
 }  // namespace scan_context_io
+static void InitDefaultsscc_info_ScanContext_scan_5fcontexts_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::scan_context_io::_ScanContext_default_instance_;
+    new (ptr) ::scan_context_io::ScanContext();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ScanContext_scan_5fcontexts_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_ScanContext_scan_5fcontexts_2eproto}, {}};
+
+static void InitDefaultsscc_info_ScanContexts_scan_5fcontexts_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::scan_context_io::_ScanContexts_default_instance_;
+    new (ptr) ::scan_context_io::ScanContexts();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_ScanContexts_scan_5fcontexts_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_ScanContexts_scan_5fcontexts_2eproto}, {
+      &scc_info_ScanContext_scan_5fcontexts_2eproto.base,}};
+
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_scan_5fcontexts_2eproto[2];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_scan_5fcontexts_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_scan_5fcontexts_2eproto = nullptr;
@@ -84,18 +94,19 @@ const char descriptor_table_protodef_scan_5fcontexts_2eproto[] PROTOBUF_SECTION_
   "\002(\005\022*\n\004data\030\003 \003(\0132\034.scan_context_io.Scan"
   "Context"
   ;
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_scan_5fcontexts_2eproto_deps[1] = {
+};
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_scan_5fcontexts_2eproto_sccs[2] = {
+  &scc_info_ScanContext_scan_5fcontexts_2eproto.base,
+  &scc_info_ScanContexts_scan_5fcontexts_2eproto.base,
+};
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_scan_5fcontexts_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_scan_5fcontexts_2eproto = {
-  false, false, 167, descriptor_table_protodef_scan_5fcontexts_2eproto, "scan_contexts.proto", 
-  &descriptor_table_scan_5fcontexts_2eproto_once, nullptr, 0, 2,
+  false, false, descriptor_table_protodef_scan_5fcontexts_2eproto, "scan_contexts.proto", 167,
+  &descriptor_table_scan_5fcontexts_2eproto_once, descriptor_table_scan_5fcontexts_2eproto_sccs, descriptor_table_scan_5fcontexts_2eproto_deps, 2, 0,
   schemas, file_default_instances, TableStruct_scan_5fcontexts_2eproto::offsets,
-  file_level_metadata_scan_5fcontexts_2eproto, file_level_enum_descriptors_scan_5fcontexts_2eproto, file_level_service_descriptors_scan_5fcontexts_2eproto,
+  file_level_metadata_scan_5fcontexts_2eproto, 2, file_level_enum_descriptors_scan_5fcontexts_2eproto, file_level_service_descriptors_scan_5fcontexts_2eproto,
 };
-PROTOBUF_ATTRIBUTE_WEAK ::PROTOBUF_NAMESPACE_ID::Metadata
-descriptor_table_scan_5fcontexts_2eproto_metadata_getter(int index) {
-  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_scan_5fcontexts_2eproto);
-  return descriptor_table_scan_5fcontexts_2eproto.file_level_metadata[index];
-}
 
 // Force running AddDescriptors() at dynamic initialization time.
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_scan_5fcontexts_2eproto(&descriptor_table_scan_5fcontexts_2eproto);
@@ -143,6 +154,11 @@ void ScanContext::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
 void ScanContext::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
+const ScanContext& ScanContext::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_ScanContext_scan_5fcontexts_2eproto.base);
+  return *internal_default_instance();
+}
+
 
 void ScanContext::Clear() {
 // @@protoc_insertion_point(message_clear_start:scan_context_io.ScanContext)
@@ -333,10 +349,11 @@ ScanContexts::ScanContexts(const ScanContexts& from)
 }
 
 void ScanContexts::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&num_rings_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&num_sectors_) -
-    reinterpret_cast<char*>(&num_rings_)) + sizeof(num_sectors_));
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_ScanContexts_scan_5fcontexts_2eproto.base);
+  ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+      reinterpret_cast<char*>(&num_rings_) - reinterpret_cast<char*>(this)),
+      0, static_cast<size_t>(reinterpret_cast<char*>(&num_sectors_) -
+      reinterpret_cast<char*>(&num_rings_)) + sizeof(num_sectors_));
 }
 
 ScanContexts::~ScanContexts() {
@@ -358,6 +375,11 @@ void ScanContexts::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
 void ScanContexts::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
+const ScanContexts& ScanContexts::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_ScanContexts_scan_5fcontexts_2eproto.base);
+  return *internal_default_instance();
+}
+
 
 void ScanContexts::Clear() {
 // @@protoc_insertion_point(message_clear_start:scan_context_io.ScanContexts)

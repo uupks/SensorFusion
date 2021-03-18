@@ -53,19 +53,18 @@ struct TableStruct_key_5fframes_2eproto {
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_key_5fframes_2eproto;
-::PROTOBUF_NAMESPACE_ID::Metadata descriptor_table_key_5fframes_2eproto_metadata_getter(int index);
 namespace scan_context_io {
 class KeyFrame;
-struct KeyFrameDefaultTypeInternal;
+class KeyFrameDefaultTypeInternal;
 extern KeyFrameDefaultTypeInternal _KeyFrame_default_instance_;
 class KeyFrames;
-struct KeyFramesDefaultTypeInternal;
+class KeyFramesDefaultTypeInternal;
 extern KeyFramesDefaultTypeInternal _KeyFrames_default_instance_;
 class Quat;
-struct QuatDefaultTypeInternal;
+class QuatDefaultTypeInternal;
 extern QuatDefaultTypeInternal _Quat_default_instance_;
 class Trans;
-struct TransDefaultTypeInternal;
+class TransDefaultTypeInternal;
 extern TransDefaultTypeInternal _Trans_default_instance_;
 }  // namespace scan_context_io
 PROTOBUF_NAMESPACE_OPEN
@@ -83,7 +82,6 @@ class Trans PROTOBUF_FINAL :
  public:
   inline Trans() : Trans(nullptr) {}
   virtual ~Trans();
-  explicit constexpr Trans(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   Trans(const Trans& from);
   Trans(Trans&& from) noexcept
@@ -120,9 +118,8 @@ class Trans PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Trans& default_instance() {
-    return *internal_default_instance();
-  }
+  static const Trans& default_instance();
+
   static inline const Trans* internal_default_instance() {
     return reinterpret_cast<const Trans*>(
                &_Trans_default_instance_);
@@ -188,7 +185,8 @@ class Trans PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    return ::descriptor_table_key_5fframes_2eproto_metadata_getter(kIndexInFileMessages);
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_key_5fframes_2eproto);
+    return ::descriptor_table_key_5fframes_2eproto.file_level_metadata[kIndexInFileMessages];
   }
 
   public:
@@ -265,7 +263,6 @@ class Quat PROTOBUF_FINAL :
  public:
   inline Quat() : Quat(nullptr) {}
   virtual ~Quat();
-  explicit constexpr Quat(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   Quat(const Quat& from);
   Quat(Quat&& from) noexcept
@@ -302,9 +299,8 @@ class Quat PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Quat& default_instance() {
-    return *internal_default_instance();
-  }
+  static const Quat& default_instance();
+
   static inline const Quat* internal_default_instance() {
     return reinterpret_cast<const Quat*>(
                &_Quat_default_instance_);
@@ -370,7 +366,8 @@ class Quat PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    return ::descriptor_table_key_5fframes_2eproto_metadata_getter(kIndexInFileMessages);
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_key_5fframes_2eproto);
+    return ::descriptor_table_key_5fframes_2eproto.file_level_metadata[kIndexInFileMessages];
   }
 
   public:
@@ -462,7 +459,6 @@ class KeyFrame PROTOBUF_FINAL :
  public:
   inline KeyFrame() : KeyFrame(nullptr) {}
   virtual ~KeyFrame();
-  explicit constexpr KeyFrame(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   KeyFrame(const KeyFrame& from);
   KeyFrame(KeyFrame&& from) noexcept
@@ -499,9 +495,8 @@ class KeyFrame PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const KeyFrame& default_instance() {
-    return *internal_default_instance();
-  }
+  static const KeyFrame& default_instance();
+
   static inline const KeyFrame* internal_default_instance() {
     return reinterpret_cast<const KeyFrame*>(
                &_KeyFrame_default_instance_);
@@ -567,7 +562,8 @@ class KeyFrame PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    return ::descriptor_table_key_5fframes_2eproto_metadata_getter(kIndexInFileMessages);
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_key_5fframes_2eproto);
+    return ::descriptor_table_key_5fframes_2eproto.file_level_metadata[kIndexInFileMessages];
   }
 
   public:
@@ -639,7 +635,6 @@ class KeyFrames PROTOBUF_FINAL :
  public:
   inline KeyFrames() : KeyFrames(nullptr) {}
   virtual ~KeyFrames();
-  explicit constexpr KeyFrames(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   KeyFrames(const KeyFrames& from);
   KeyFrames(KeyFrames&& from) noexcept
@@ -676,9 +671,8 @@ class KeyFrames PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const KeyFrames& default_instance() {
-    return *internal_default_instance();
-  }
+  static const KeyFrames& default_instance();
+
   static inline const KeyFrames* internal_default_instance() {
     return reinterpret_cast<const KeyFrames*>(
                &_KeyFrames_default_instance_);
@@ -744,7 +738,8 @@ class KeyFrames PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    return ::descriptor_table_key_5fframes_2eproto_metadata_getter(kIndexInFileMessages);
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_key_5fframes_2eproto);
+    return ::descriptor_table_key_5fframes_2eproto.file_level_metadata[kIndexInFileMessages];
   }
 
   public:
