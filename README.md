@@ -11,3 +11,5 @@
 ### [第五章作业](./doc/Lecture5_Homework/README.md)
 
 ### [第六章作业](./doc/Lecture6_Homework/README.md)
+
+### [第七章作业](./doc/Lecture7_Homework/README.md)
