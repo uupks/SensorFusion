@@ -116,11 +116,11 @@ error_state_kalman_filter:
         latitude:   48.9827703173
     covariance:
         prior:
-            pos: 1.0e-5
-            vel: 1.0e-5
-            ori: 1.0e-5
-            epsilon: 1.0e-5
-            delta: 1.0e-5
+            pos: 1.0e-6
+            vel: 1.0e-6
+            ori: 1.0e-6
+            epsilon: 1.0e-6
+            delta: 1.0e-6
         process:
             gyro: 1.0e-4
             accel: 2.5e-3
@@ -128,9 +128,9 @@ error_state_kalman_filter:
             bias_gyro: 1.0e-4
         measurement:
             pose:
-                pos: 1.0e-4
-                ori: 1.0e-4
-            pos: 1.0e-4
+                pos: 1.0e-3
+                ori: 1.0e-3
+            pos: 1.0e-3
             vel: 2.5e-3
     motion_constraint: 
         activated: true
