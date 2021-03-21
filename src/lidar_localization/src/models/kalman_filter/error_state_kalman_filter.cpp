@@ -560,7 +560,9 @@ void ErrorStateKalmanFilter::SetProcessEquation(const Eigen::Matrix3d &C_nb,
   F_.block<3, 3>(INDEX_ERROR_ORI, INDEX_ERROR_ORI) =
       -Sophus::SO3d::hat(w_b).matrix();
   B_.block<3, 3>(INDEX_ERROR_VEL, 0) = C_nb;
-  B_.block<9, 9>(INDEX_ERROR_ORI, INDEX_ERROR_VEL).setIdentity();
+  // B_.block<9, 9>(INDEX_ERROR_ORI, INDEX_ERROR_VEL).setIdentity();
+  // no random walk 
+  B_.block<3, 3>(INDEX_ERROR_ORI, INDEX_ERROR_VEL).setIdentity();
 }
 
 /**
@@ -600,8 +602,9 @@ void ErrorStateKalmanFilter::UpdateErrorEstimation(
   // approximate to 2nd order:
   MatrixF F = MatrixF::Identity() + F_1st ;//+ F_2nd;
   MatrixB B = T * B_;
-  B.block<6, 6>(6, 6) = Eigen::Matrix<double, 6, 6>::Identity() * sqrt(T);
-
+  // B.block<6, 6>(6, 6) = Eigen::Matrix<double, 6, 6>::Identity() * sqrt(T);
+  // no random walk
+  // LOG(INFO)<<"B : "<<B;
   //
   // TODO: perform Kalman prediction
   //
@@ -703,6 +706,9 @@ void ErrorStateKalmanFilter::EliminateError(void) {
   if (IsCovStable(INDEX_ERROR_ACCEL)) {
     accl_bias_ += X_.block<3, 1>(INDEX_ERROR_ACCEL, 0);
   }
+
+  LOG(INFO)<<"gyro bias : "<<gyro_bias_.transpose();
+  LOG(INFO)<<"accl bias : "<<accl_bias_.transpose();
 }
 
 /**
