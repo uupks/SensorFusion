@@ -17,39 +17,40 @@ using namespace lidar_localization;
 
 bool _need_save_odometry = false;
 
-bool SaveOdometryCB(saveOdometry::Request &request,
-                    saveOdometry::Response &response) {
-  _need_save_odometry = true;
-  response.succeed = true;
-  return response.succeed;
+bool SaveOdometryCB(saveOdometry::Request &request, saveOdometry::Response &response) {
+    _need_save_odometry = true;
+    response.succeed = true;
+    return response.succeed;
 }
 
+
 int main(int argc, char *argv[]) {
-  google::InitGoogleLogging(argv[0]);
-  FLAGS_log_dir = WORK_SPACE_PATH + "/Log";
-  FLAGS_alsologtostderr = 1;
+    google::InitGoogleLogging(argv[0]);
+    FLAGS_log_dir = WORK_SPACE_PATH + "/Log";
+    FLAGS_alsologtostderr = 1;
 
-  ros::init(argc, argv, "kitti_filtering_node");
-  ros::NodeHandle nh;
+    ros::init(argc, argv, "kitti_filtering_node");
+    ros::NodeHandle nh;
 
-  std::shared_ptr<KITTIFilteringFlow> kitti_filtering_flow_ptr =
-      std::make_shared<KITTIFilteringFlow>(nh);
-  ros::ServiceServer service =
-      nh.advertiseService("save_odometry", SaveOdometryCB);
+    std::shared_ptr<KITTIFilteringFlow> kitti_filtering_flow_ptr = std::make_shared<KITTIFilteringFlow>(nh);
+    ros::ServiceServer service = nh.advertiseService("save_odometry", SaveOdometryCB);
 
-  ros::Rate rate(100);
-  while (ros::ok()) {
-    ros::spinOnce();
+    ros::Rate rate(100);
+    while (ros::ok()) {
+        ros::spinOnce();
 
-    kitti_filtering_flow_ptr->Run();
+        kitti_filtering_flow_ptr->Run();
 
-    // save odometry estimations for evo evaluation:
-    if (_need_save_odometry && kitti_filtering_flow_ptr->SaveOdometry()) {
-      _need_save_odometry = false;
+        // save odometry estimations for evo evaluation:
+        if ( 
+            _need_save_odometry && 
+            kitti_filtering_flow_ptr->SaveOdometry()
+        ) {
+            _need_save_odometry = false;
+        }
+
+        rate.sleep();
     }
 
-    rate.sleep();
-  }
-
-  return 0;
+    return 0;
 }

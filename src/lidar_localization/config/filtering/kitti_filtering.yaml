@@ -124,13 +124,11 @@ error_state_kalman_filter:
         process:
             gyro: 1.0e-4
             accel: 2.5e-3
-            bias_accel: 2.5e-3
-            bias_gyro: 1.0e-4
         measurement:
             pose:
-                pos: 1.0e-3
-                ori: 1.0e-3
-            pos: 1.0e-3
+                pos: 1.0e-4
+                ori: 1.0e-4
+            pos: 1.0e-4
             vel: 2.5e-3
     motion_constraint: 
         activated: true

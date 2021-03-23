@@ -8,7 +8,7 @@ fusion_method: error_state_kalman_filter
 #     3. position_velocity
 #     4. position_magnetic_field
 #     5. position_velocity_magnetic_field
-fusion_strategy: position
+fusion_strategy: position_velocity
 
 ## 1. Iterative Extended Kalman filter for IMU-GNSS-Odo-Mag fusion:
 extended_kalman_filter:
@@ -40,11 +40,11 @@ extended_kalman_filter:
             pose:
                 pos: 1.0e-4
                 ori: 1.0e-4
-            pos: 1.0e-8
-            vel: 1.0e-8
-            mag: 1.0e-8
+            pos: 2.5e-1
+            vel: 2.5e-3
+            mag: 1.0e-4
     motion_constraint: 
-        activated: false
+        activated: true
         w_b_thresh: 0.13
 ## 2. Error-State Kalman filter for IMU-GNSS-Odo fusion:
 error_state_kalman_filter:
@@ -69,8 +69,8 @@ error_state_kalman_filter:
             pose:
                 pos: 1.0e-4
                 ori: 1.0e-4
-            pos: 1.0e-8
-            vel: 1.0e-8
+            pos: 2.5e-1
+            vel: 2.5e-3
     motion_constraint: 
-        activated: false
+        activated: true
         w_b_thresh: 0.13

@@ -75,15 +75,15 @@ add_executable(test_frame_node src/apps/test_frame_node.cpp ${ALL_SRCS})
 target_link_libraries(test_frame_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(data_pretreat_node src/apps/data_pretreat_node.cpp ${ALL_SRCS})
-add_dependencies(data_pretreat_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(data_pretreat_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(data_pretreat_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(lidar_preprocess_node src/apps/lidar_preprocess_node.cpp ${ALL_SRCS})
-add_dependencies(lidar_preprocess_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(lidar_preprocess_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(lidar_preprocess_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(front_end_node src/apps/front_end_node.cpp ${ALL_SRCS})
-add_dependencies(front_end_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(front_end_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(front_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(back_end_node src/apps/back_end_node.cpp ${ALL_SRCS})
@@ -91,7 +91,7 @@ add_dependencies(back_end_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_genera
 target_link_libraries(back_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(loop_closing_node src/apps/loop_closing_node.cpp ${ALL_SRCS})
-add_dependencies(loop_closing_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(loop_closing_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(loop_closing_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(viewer_node src/apps/viewer_node.cpp ${ALL_SRCS})
@@ -99,19 +99,19 @@ add_dependencies(viewer_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate
 target_link_libraries(viewer_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(kitti_filtering_node src/apps/kitti_filtering_node.cpp ${ALL_SRCS})
-add_dependencies(kitti_filtering_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(kitti_filtering_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(kitti_filtering_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(eskf_preprocess_node src/apps/eskf_preprocess_node.cpp ${ALL_SRCS})
-add_dependencies(eskf_preprocess_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(eskf_preprocess_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(eskf_preprocess_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(gnss_ins_sim_preprocess_node src/apps/gnss_ins_sim_preprocess_node.cpp ${ALL_SRCS})
-add_dependencies(gnss_ins_sim_preprocess_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(gnss_ins_sim_preprocess_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(gnss_ins_sim_preprocess_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(gnss_ins_sim_filtering_node src/apps/gnss_ins_sim_filtering_node.cpp ${ALL_SRCS})
-add_dependencies(gnss_ins_sim_filtering_node ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(gnss_ins_sim_filtering_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(gnss_ins_sim_filtering_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 #############
