@@ -635,7 +635,7 @@ void ErrorStateKalmanFilter::UpdateErrorEstimation(
  * @return void
  */
 void ErrorStateKalmanFilter::CorrectErrorEstimationPose(
-    const Eigen::Matrix4d &T_nb,
+    const Eigen::Matrix4d &T_nb, const Eigen::Vector3d &v_b, const Eigen::Vector3d &w_b,
     Eigen::VectorXd &Y, Eigen::MatrixXd &G, Eigen::MatrixXd &K
 ) {
     // set measurement:
@@ -644,15 +644,35 @@ void ErrorStateKalmanFilter::CorrectErrorEstimationPose(
 
     YPose_.block<3, 1>(0, 0) = P_nn_obs;
     YPose_.block<3, 1>(3, 0) = Sophus::SO3d::vee(Eigen::Matrix3d::Identity() - C_nn_obs);
+    // YPose_.block<3, 1>(3, 0) = Sophus::SO3d::vee(Eigen::Matrix3d::Identity() - C_nn_obs);
 
     Y = YPose_;
 
     // set measurement equation:
     G = GPose_;
 
-    // set Kalman gain:
-    MatrixRPose R = GPose_*P_*GPose_.transpose() + RPose_;
-    K = P_*GPose_.transpose()*R.inverse();
+    if ( !IsTurning(w_b) && MOTION_CONSTRAINT.ACTIVATED ) {
+        VectorYPoseVelCons YPoseVelCons = VectorYPoseVelCons::Zero();
+        YPoseVelCons.block<3, 1>(0, 0) = YPose_.block<3, 1>(0, 0);
+        YPoseVelCons.block<3, 1>(5, 0) = YPose_.block<3, 1>(3, 0);
+
+        Y = YPoseVelCons;
+        // set measurement equation, with motion constraint:
+        GPoseVelCons_.block<3, 3>(0, 0) = Eigen::Matrix3d::Identity();
+        GPoseVelCons_.block<3, 3>(5, 6) = Eigen::Matrix3d::Identity();
+        GPoseVelCons_.block<2, 3>(3, 3) = pose_.block<3, 3>(0,0).transpose().block<2 ,3>(1, 0);
+        GPoseVelCons_.block<2, 3>(3, 6) = Sophus::SO3d::hat(v_b).block<2, 3>(1, 0);
+
+        G = GPoseVelCons_;
+
+        MatrixRPoseVelCons RCons = GPoseVelCons_*P_*GPoseVelCons_.transpose() + CPoseVelCons_*RPoseVel_*CPoseVelCons_.transpose();
+        K = P_*GPoseVelCons_.transpose()*RCons.inverse();
+
+    } else {
+        // set Kalman gain:
+        MatrixRPose R = GPose_*P_*GPose_.transpose() + RPose_;
+        K = P_*GPose_.transpose()*R.inverse();
+    }
 }
 
 /**
@@ -794,7 +814,7 @@ void ErrorStateKalmanFilter::CorrectErrorEstimation(
     switch ( measurement_type ) {
         case MeasurementType::POSE:
             CorrectErrorEstimationPose(
-                measurement.T_nb,
+                measurement.T_nb, measurement.v_b, measurement.w_b,
                 Y, G, K
             );
             break;
