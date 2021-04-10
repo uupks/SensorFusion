@@ -4,7 +4,7 @@
 # a. global map for relative pose estimation using lidar frontend:
 map_path: /workspace/assignments/01-lidar-odometry/src/09-sliding-window/src/lidar_localization/slam_data/map/filtered_map.pcd
 # b. scan context index for map matching:
-scan_context_path: /workspace/assignments/01-lidar-odometry/src/09-sliding-window/src/lidar_localization/config/scan_context   
+scan_context_path: /workspace/assignments/01-lidar-odometry/src/09-sliding-window/src/lidar_localization/slam_data/scan_context
 
 #
 # point cloud map & measurement processors
