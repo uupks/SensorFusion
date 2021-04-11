@@ -12,6 +12,35 @@
 
 ### 地图匹配位姿和优化变量的残差雅可比
 
+* Residual
+  <!-- $$
+  e_p = t - t_{obs}
+  $$ -->
+  ![e_p](https://g.yuque.com/gr/latex?e_p%20%3D%20t%20-%20t_%7Bobs%7D%0A#card=math&code=e_p%20%3D%20t%20-%20t_%7Bobs%7D%0A)
+
+  <!-- $$
+  e_{lie} = \ln(R_{obs}^{T}R)^{\vee} = ln(\exp(\phi_{1}^{\hat{}}))^{\vee}
+  $$ -->
+  ![e_lie](https://g.yuque.com/gr/latex?e_%7Blie%7D%20%3D%20%5Cln(R_%7Bobs%7D%5E%7BT%7DR)%5E%7B%5Cvee%7D%20%3D%20ln(%5Cexp(%5Cphi_%7B1%7D%5E%7B%5Cvee%7D))%0A#card=math&code=e_%7Blie%7D%20%3D%20%5Cln%28R_%7Bobs%7D%5E%7BT%7DR%29%5E%7B%5Cvee%7D%20%3D%20ln%28%5Cexp%28%5Cphi_%7B1%7D%5E%7B%5Cvee%7D%29%29%0A)
+
+* Jacobian (基于扰动模型)
+  <!-- $$
+  \frac{\partial{e_{p}}}{\partial{t}} = I_3
+  $$ -->
+  ![J_dep_dt](https://g.yuque.com/gr/latex?%5Cfrac%7B%5Cpartial%7Be_%7Bp%7D%7D%7D%7B%5Cpartial%7Bt%7D%7D%20%3D%20I_3%0A#card=math&code=%5Cfrac%7B%5Cpartial%7Be_%7Bp%7D%7D%7D%7B%5Cpartial%7Bt%7D%7D%20%3D%20I_3%0A)
+
+  <!-- $$
+  \begin{aligned}
+  \frac{\partial{e_{lie}}}{\partial{\delta{\phi}}} 
+  & = \frac{\partial\ln(R_{obs}^{T}R\exp{(\delta\phi^{\hat{}})})^{\vee}}{\partial{\delta{\phi}}} \\
+  & = \frac{\partial\ln{(\exp{(\phi_{1}^{\hat{}})}\exp{(\delta{\phi^{\hat{}}})})^{\vee}}}{\partial{\delta{\phi}}} \\
+  & \approx \frac{\partial(({\phi_{1}} + J_r(\phi_1)^{-1})\cdot{\delta\phi})}{\partial{\delta\phi}} \\
+  & = J_r(\phi_1)^{-1}
+  \end{aligned}
+  $$ -->
+
+  ![](https://cdn.nlark.com/yuque/__latex/67a0fde4ed59d01555e5e98332a6aabf.svg#card=math&code=%20%20%5Cbegin%7Baligned%7D%0A%20%20%5Cfrac%7B%5Cpartial%7Be_%7Blie%7D%7D%7D%7B%5Cpartial%7B%5Cdelta%7B%5Cphi%7D%7D%7D%20%0A%20%20%26%20%3D%20%5Cfrac%7B%5Cpartial%5Cln%28R_%7Bobs%7D%5E%7BT%7DR%5Cexp%7B%28%5Cdelta%5Cphi%5E%7B%5Chat%7B%7D%7D%29%7D%29%5E%7B%5Cvee%7D%7D%7B%5Cpartial%7B%5Cdelta%7B%5Cphi%7D%7D%7D%20%5C%5C%0A%20%20%26%20%3D%20%5Cfrac%7B%5Cpartial%5Cln%7B%28%5Cexp%7B%28%5Cphi_%7B1%7D%5E%7B%5Chat%7B%7D%7D%29%7D%5Cexp%7B%28%5Cdelta%7B%5Cphi%5E%7B%5Chat%7B%7D%7D%7D%29%7D%29%5E%7B%5Cvee%7D%7D%7D%7B%5Cpartial%7B%5Cdelta%7B%5Cphi%7D%7D%7D%20%5C%5C%0A%20%20%26%20%5Capprox%20%5Cfrac%7B%5Cpartial%28%28%7B%5Cphi_%7B1%7D%7D%20%2B%20J_r%28%5Cphi_1%29%5E%7B-1%7D%29%5Ccdot%7B%5Cdelta%5Cphi%7D%29%7D%7B%5Cpartial%7B%5Cdelta%5Cphi%7D%7D%20%5C%5C%0A%20%20%26%20%3D%20J_r%28%5Cphi_1%29%5E%7B-1%7D%0A%20%20%5Cend%7Baligned%7D&height=151&width=225)
+
 ### 激光里程计相对位姿和优化变量的残差雅可比
 
 ### IMU预积分和优化变量的残差雅可比
