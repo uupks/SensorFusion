@@ -59,7 +59,8 @@ public:
     //
     Eigen::Map<Eigen::Matrix<double, 6, 1>> residual(residuals);
     residual.block<3, 1>(0, 0) = pos - pos_prior;
-    residual.block<3, 1>(3, 0) = (ori * ori_prior.inverse()).log();
+    // residual.block<3, 1>(3, 0) = (ori * ori_prior.inverse()).log();
+    residual.block<3, 1>(3, 0) = (ori_prior.inverse() * ori).log();
   
     //
     // TODO: compute jacobians:
@@ -71,7 +72,8 @@ public:
         jacobian_prior.setZero();
 
         jacobian_prior.block<3, 3>(0, 0) = Eigen::Matrix3d::Identity();
-        jacobian_prior.block<3, 3>(3, 3) = JacobianRInv(residual.block(0, 0, 3, 1))*ori_prior.matrix();
+        // jacobian_prior.block<3, 3>(3, 3) = JacobianRInv(residual.block(0, 0, 3, 1))*ori_prior.matrix();
+        jacobian_prior.block<3, 3>(3, 3) = JacobianRInv(residual.block(0, 0, 3, 1));//*ori_prior.matrix();
 
         jacobian_prior = sqrt_info * jacobian_prior;
       }

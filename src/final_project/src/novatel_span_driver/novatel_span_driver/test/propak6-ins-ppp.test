@@ -1,0 +1,20 @@
+<launch>
+  <!-- This pcap file is from a ProPak6 connected to an IMU, running SPAN,
+       with a TerraStar PPP fix. -->
+  <node name="novatel_span_driver" pkg="novatel_span_driver" type="driver">
+    <param name="pcap_file" value="$(find novatel_span_driver)/test/propak6-ins-ppp.pcap.gz" />
+    <param name="publish_tf" value="true" />
+    <param name="zero_start" value="true" />
+    <param name="rate" value="100" />
+  </node>
+
+  <test test-name="hztest_test" pkg="rostest" type="hztest" name="hztest">
+    <rosparam>
+      topic: /navsat/odom
+      hz: 12.5
+      hzerror: 5.0
+      test_duration: 5.0
+      wait_time: 5.0
+    </rosparam>
+  </test>
+</launch>

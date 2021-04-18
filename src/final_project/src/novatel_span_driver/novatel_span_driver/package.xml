@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package>
+  <name>novatel_span_driver</name>
+  <version>1.1.0</version>
+  <description>Python driver for NovAtel SPAN devices.</description>
+
+  <maintainer email="mpurvis@clearpathrobotics.com">Mike Purvis</maintainer>
+  <maintainer email="icolwell@gsd.uwaterloo.ca">Ian Colwell</maintainer>
+  <maintainer email="jwhitley@autonomoustuff.com">Josh Whitley</maintainer>
+
+  <author email="support@novatel.com">NovAtel Support</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roslaunch</build_depend>
+  <build_depend>roslint</build_depend>
+  <build_depend>rostest</build_depend>
+  
+  <run_depend>diagnostic_msgs</run_depend>
+  <run_depend>diagnostic_updater</run_depend>
+  <run_depend>geodesy</run_depend>
+  <run_depend>novatel_msgs</run_depend>
+  <run_depend>python-serial</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>tf</run_depend>
+
+  <test_depend>python-pcapy</test_depend>
+  <test_depend>python-impacket</test_depend>
+</package>

@@ -1,0 +1,15 @@
+<launch>
+  <!-- This data log is from a ProPak6 with no connected IMU. -->
+  <node name="novatel_span_driver" pkg="novatel_span_driver" type="driver">
+    <param name="pcap_file" value="$(find novatel_span_driver)/test/propak6-basic-fix.pcap.gz" />
+  </node>
+  <test test-name="hztest_test" pkg="rostest" type="hztest" name="hztest">
+    <rosparam>
+      topic: /navsat/fix
+      hz: 10.0
+      hzerror: 5.0
+      test_duration: 5.0
+      wait_time: 5.0
+    </rosparam>
+  </test>
+</launch>
